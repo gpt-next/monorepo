@@ -1,12 +1,13 @@
 {
-  "name": "monorepo",
-  "version": "1.0.0",
-  "description": "Use NX to create a monorepo for Typescript and Go services",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "name": "@org/source",
+  "version": "0.0.0",
+  "license": "MIT",
+  "scripts": {},
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {
+    "@nx/js": "17.2.8",
+    "@nx/workspace": "17.2.8",
+    "nx": "17.2.8"
+  }
 }
