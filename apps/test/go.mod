@@ -1,6 +1,6 @@
 module github.com/gpt-next/monorepo/apps/test
 
-go 1.21.4
+go 1.21
 
 require github.com/rs/zerolog v1.31.0
 
