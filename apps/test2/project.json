@@ -22,14 +22,11 @@
       "dependsOn": ["build"],
       "command": "docker build -f apps/test2/Dockerfile . -t ghcr.io/gpt-next/monorepo-test2:$IMAGE_TAG"
     },
-    "format": {
-      "command": "go fmt apps/test2/src/..."
-    },
     "lint": {
       "command": "go vet ./apps/test2/src/..."
     },
     "test": {
-      "command": "go test ./apps/test2/src/..."
+      "command": "go test ./apps/test2/..."
     }
   }
 }

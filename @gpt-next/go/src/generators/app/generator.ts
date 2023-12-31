@@ -33,9 +33,6 @@ export async function appGenerator(tree: Tree, options: AppGeneratorSchema) {
         dependsOn: ['build'],
         command: `docker build -f apps/${options.name}/Dockerfile . -t ghcr.io/gpt-next/monorepo-${options.name}:$IMAGE_TAG`,
       },
-      format: {
-        command: `go fmt apps/${options.name}/src/...`,
-      },
       lint: {
         command: `go vet ./apps/${options.name}/src/...`,
       },
