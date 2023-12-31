@@ -1,0 +1,1 @@
+export { createDependencies } from './go-package-graph';

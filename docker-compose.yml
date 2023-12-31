@@ -1,0 +1,10 @@
+version: '3'
+services:
+  test:
+    build:
+      context: ./apps/test
+      dockerfile: Dockerfile.dev
+    ports:
+      - 8080:8080
+    volumes:
+      - ./apps/test:/app

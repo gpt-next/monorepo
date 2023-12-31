@@ -6,13 +6,35 @@
   "properties": {
     "name": {
       "type": "string",
-      "description": "",
+      "description": "Name of the service",
       "$default": {
         "$source": "argv",
         "index": 0
       },
-      "x-prompt": "What name would you like to use?"
+      "x-prompt": "What is the name of your service?"
+    },
+    "deployment": {
+      "type": "string",
+      "description": "Type of service k8s or lambda",
+      "default": "k8s",
+      "x-prompt": {
+        "message": "How will you deploy the service?",
+        "type": "list",
+        "items": [
+          {
+            "value": "k8s",
+            "label": "Kubernetes"
+          },
+          {
+            "value": "lambda",
+            "label": "AWS Lambda"
+          }
+        ]
+      }
     }
   },
-  "required": ["name"]
+  "required": [
+    "name",
+    "deployment"
+  ]
 }

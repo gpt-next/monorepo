@@ -1,0 +1,8 @@
+# Copy artifacts to a clean image
+<% if (isLambda) { %>
+FROM public.ecr.aws/lambda/provided:al2023
+<% } else { %>
+FROM alpine:3.18
+<% } %>
+COPY dist/apps/<%= name %> ./main
+ENTRYPOINT [ "./main" ]
