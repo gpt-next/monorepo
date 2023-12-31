@@ -25,7 +25,7 @@ jobs:
         run: git branch --track main origin/main
       
       - name: Get Commit SHA
-        run: echo "::set-env name=IMAGE_TAG::$(git rev-parse --short ${{ github.sha }})"
+        run: echo "IMAGE_TAG=${{ github.sha }}" >> $GITHUB_ENV
       - run: npx nx format:check
       - run: npx nx affected -t lint --parallel=1
       - run: npx nx affected -t test --parallel=1
