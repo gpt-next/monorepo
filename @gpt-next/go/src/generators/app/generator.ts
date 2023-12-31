@@ -21,7 +21,6 @@ export async function appGenerator(tree: Tree, options: AppGeneratorSchema) {
         command: `GOOS=darwin go build --race -o ./dist/apps/${options.name}/main ./apps/${options.name}/src/main.go`,
       },
       'package-mac': {
-        dependsOn: ['build-mac'],
         command:
           'docker build -f apps/test/Dockerfile . -t ghcr.io/gpt-next/monorepo-test:latest-local',
       },
@@ -30,8 +29,10 @@ export async function appGenerator(tree: Tree, options: AppGeneratorSchema) {
         outputs: [`{workspaceRoot}/dist/apps/${options.name}/main`],
       },
       package: {
-        dependsOn: ['build'],
-        command: `docker build -f apps/${options.name}/Dockerfile . -t ghcr.io/gpt-next/monorepo-${options.name}:$IMAGE_TAG`,
+        command: `docker build -f apps/${options.name}/Dockerfile . -t ghcr.io/gpt-next/monorepo/${options.name}:$IMAGE_TAG`,
+      },
+      publish: {
+        command: `docker push ghcr.io/gpt-next/monorepo/${options.name}:$IMAGE_TAG`,
       },
       lint: {
         command: `go vet ./apps/${options.name}/src/...`,
