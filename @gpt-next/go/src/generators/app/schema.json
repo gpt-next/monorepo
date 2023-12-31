@@ -33,8 +33,5 @@
       }
     }
   },
-  "required": [
-    "name",
-    "deployment"
-  ]
+  "required": ["name", "deployment"]
 }
