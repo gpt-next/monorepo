@@ -6,10 +6,10 @@ import {
 import * as fs from 'fs';
 
 export const createDependencies: CreateDependencies = (opts, ctx) => {
-  var projects = Object.values(ctx.projects);
+  const projects = Object.values(ctx.projects);
   //Get all of the go projects mod files to get the module names
-  var modules = [];
-  for (var i = 0; i < projects.length; i++) {
+  const modules = [];
+  for (let i = 0; i < projects.length; i++) {
     const checkForGoModFile = `${ctx.workspaceRoot}/${projects[i].root}/go.mod`;
     if (fs.existsSync(checkForGoModFile)) {
       modules.push({
@@ -19,11 +19,11 @@ export const createDependencies: CreateDependencies = (opts, ctx) => {
     }
   }
 
-  var results = [];
+  const results = [];
 
-  for (var i = 0; i < projects.length; i++) {
+  for (let i = 0; i < projects.length; i++) {
     const projectName = projects[i].name;
-    var goFiles = [];
+    let goFiles = [];
     try {
       goFiles = ctx.filesToProcess.projectFileMap[projectName].filter((e) =>
         e.file.endsWith('.go'),
@@ -32,7 +32,7 @@ export const createDependencies: CreateDependencies = (opts, ctx) => {
       continue;
     }
 
-    for (var j = 0; j < goFiles.length; j++) {
+    for (let j = 0; j < goFiles.length; j++) {
       const goFilePath = `${ctx.workspaceRoot}/${goFiles[j].file}`;
       parseGoImports(goFilePath).forEach((importPath) => {
         const moduleMatch = modules.filter((m) => {
