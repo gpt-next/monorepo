@@ -19,8 +19,10 @@
       "outputs": ["{workspaceRoot}/dist/apps/test/main"]
     },
     "package": {
-      "dependsOn": ["build"],
       "command": "docker build -f apps/test/Dockerfile . -t ghcr.io/gpt-next/monorepo-test:$IMAGE_TAG"
+    },
+    "publish": {
+      "command": "docker push ghcr.io/gpt-next/monorepo-test:$IMAGE_TAG"
     },
     "lint": {
       "command": "go vet ./apps/test/src/..."

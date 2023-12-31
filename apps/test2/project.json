@@ -11,7 +11,6 @@
       "command": "GOOS=darwin go build --race -o ./dist/apps/test2/main ./apps/test2/src/main.go"
     },
     "package-mac": {
-      "dependsOn": ["build-mac"],
       "command": "docker build -f apps/test/Dockerfile . -t ghcr.io/gpt-next/monorepo-test:latest-local"
     },
     "build": {
@@ -19,8 +18,10 @@
       "outputs": ["{workspaceRoot}/dist/apps/test2/main"]
     },
     "package": {
-      "dependsOn": ["build"],
       "command": "docker build -f apps/test2/Dockerfile . -t ghcr.io/gpt-next/monorepo-test2:$IMAGE_TAG"
+    },
+    "publish": {
+      "command": "docker push ghcr.io/gpt-next/monorepo-test2:$IMAGE_TAG"
     },
     "lint": {
       "command": "go vet ./apps/test2/src/..."

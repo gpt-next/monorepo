@@ -31,3 +31,4 @@ jobs:
       - run: npx nx affected -t test --parallel=1
       - run: npx nx affected -t build --parallel=1
       - run: npx nx affected -t package --parallel=1
+      - run: npx nx affected -t publish --parallel=1
