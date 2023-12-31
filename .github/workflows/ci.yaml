@@ -23,7 +23,9 @@ jobs:
       # This line is needed for nx affected to work when CI is running on a PR
       - if: github.ref != 'refs/heads/main'
         run: git branch --track main origin/main
-
+      
+      - name: Get Commit SHA
+        run: echo "::set-env name=IMAGE_TAG::$(git rev-parse --short ${{ github.sha }})"
       - run: npx nx format:check
       - run: npx nx affected -t lint --parallel=1
       - run: npx nx affected -t test --parallel=1
