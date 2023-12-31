@@ -1,0 +1,35 @@
+{
+  "name": "test2",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/test2/src",
+  "targets": {
+    "serve": {
+      "command": "go run ./apps/test2/src/main.go"
+    },
+    "build-mac": {
+      "command": "GOOS=darwin go build --race -o ./dist/apps/test2/main ./apps/test2/src/main.go"
+    },
+    "package-mac": {
+      "dependsOn": ["build-mac"],
+      "command": "docker build -f apps/test/Dockerfile . -t ghcr.io/gpt-next/monorepo-test:latest-local"
+    },
+    "build": {
+      "command": "GOOS=linux go build --race -o ./dist/apps/test2/main ./apps/test2/src/main.go",
+      "outputs": ["{workspaceRoot}/dist/apps/test2/main"]
+    },
+    "package": {
+      "dependsOn": ["build"],
+      "command": "docker build -f apps/test2/Dockerfile . -t ghcr.io/gpt-next/monorepo-test2:$IMAGE_TAG"
+    },
+    "format": {
+      "command": "go fmt apps/test2/src/..."
+    },
+    "lint": {
+      "command": "go vet ./apps/test2/src/..."
+    },
+    "test": {
+      "command": "go test ./apps/test2/src/..."
+    }
+  }
+}

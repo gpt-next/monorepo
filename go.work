@@ -1,3 +1,5 @@
 go 1.21.4
 
 use apps/test
+
+use apps/test2
