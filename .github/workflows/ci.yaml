@@ -39,4 +39,6 @@ jobs:
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - run: npx nx affected -t publish --parallel=1
       - if: github.ref == 'refs/heads/main'
+        run: npx nx affected -t package-latest --parallel=1
+      - if: github.ref == 'refs/heads/main'
         run: npx nx affected -t publish-latest --parallel=1
