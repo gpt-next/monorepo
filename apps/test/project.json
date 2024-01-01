@@ -24,6 +24,12 @@
     "publish": {
       "command": "docker push ghcr.io/gpt-next/monorepo/test:$IMAGE_TAG"
     },
+    "publish-latest": {
+      "commands": [
+        "docker tag ghcr.io/gpt-next/monorepo/test:$IMAGE_TAG ghcr.io/gpt-next/monorepo/test:latest",
+        "docker push ghcr.io/gpt-next/monorepo/test:latest"
+      ]
+    },
     "lint": {
       "command": "go vet ./apps/test/src/..."
     },
