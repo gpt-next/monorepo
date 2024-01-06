@@ -14,7 +14,7 @@
       "command": "docker build -f apps/test/Dockerfile . -t ghcr.io/gpt-next/monorepo-test:latest-local"
     },
     "build": {
-      "command": "GOOS=linux go build --race -o ./dist/apps/test2/main ./apps/test2/src/main.go",
+      "command": "GOOS=linux CGO_ENABLED=0 go build --race -o ./dist/apps/test2/main ./apps/test2/src/main.go",
       "outputs": ["{workspaceRoot}/dist/apps/test2/main"]
     },
     "package": {
