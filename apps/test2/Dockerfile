@@ -2,5 +2,5 @@
 
 FROM ubuntu:focal
 
-COPY dist/apps/test2 ./main
+COPY dist/apps/test2/main ./main
 ENTRYPOINT [ "./main" ]
