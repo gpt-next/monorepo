@@ -1,0 +1,26 @@
+name: CI
+on:
+  push:
+    branches:
+      # Change this if your primary branch is not main
+      - release/*
+  pull_request:
+    
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Extract branch name
+        shell: bash
+        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
+        id: extract_branch
+      - name: What is the branch?
+        shell: bash
+        run: echo ${{ steps.extract_branch.outputs.branch }}

@@ -17,13 +17,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Extract branch name
-        shell: bash
-        run: echo "branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}" >> $GITHUB_OUTPUT
-        id: extract_branch
-      - name: What is the branch?
-        shell: bash
-        run: echo ${{ steps.extract_branch.outputs.branch }}
       # Cache node_modules
       - uses: actions/setup-node@v3
         with:
