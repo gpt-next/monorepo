@@ -20,8 +20,8 @@ jobs:
       - name: Extract branch name
         shell: bash
         run: |
-          BRANCH = ${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          VERSION = ${BRANCH#release/}
+          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          VERSION=${BRANCH#release/}
           echo "version=${VERSION}" >> $GITHUB_OUTPUT
         id: extract_branch
       - name: What is the release version?
