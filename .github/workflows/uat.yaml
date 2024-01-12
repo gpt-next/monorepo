@@ -49,3 +49,17 @@ jobs:
       - name: Promote services 
         run: |
           npx nx run-many -t promote-image --all --parallel=1
+      - name: Create new tag
+        uses: actions/github-script@v5
+        with:
+            script: |
+                const { owner, repo } = context.repo
+                const tag_name = ${{ env.TAG_TO_PROMOTE }}
+                const message = `Release ${tag_name}`
+                const sha = "${{ fromJson(steps.release.outputs.result).target_commitish }}"
+                await github.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/tags/${tag_name}`,
+                sha
+                })
