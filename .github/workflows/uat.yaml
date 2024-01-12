@@ -44,6 +44,8 @@ jobs:
             SEMVER="$VNUM1.$VNUM2.$VNUM3"
             echo "TAG_TO_PROMOTE=$CURRENT_VERSION" >> $GITHUB_ENV
             echo "PROMOTED_TAG=$SEMVER" >> $GITHUB_ENV
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Promote services 
         run: |
           npx nx run-many -t promote-image --all --parallel=1
