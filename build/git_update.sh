@@ -22,7 +22,7 @@ if [[ $CURRENT_VERSION == '' ]]; then
 else
   # Extract release candidate number from the latest tag
   RELEASE_CANDIDATE=$(echo "$CURRENT_VERSION" | awk -F'[-rc]' '{print $2}')
-  
+  echo "Release candidate number: $RELEASE_CANDIDATE"
   if [ -z "$RELEASE_CANDIDATE" ]; then
     echo "No release candidate number found in tag $CURRENT_VERSION"
     # If the latest tag is not a release candidate, reset RC_NUM and increment minor version
