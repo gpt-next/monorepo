@@ -19,7 +19,7 @@ jobs:
       - name: Get next tag
         id: get-next-tag
         run: |
-          bash ./build/git_next_tag.sh
+          bash ./build/get_next_tag.sh
        # Cache node_modules
       - uses: actions/setup-node@v3
         with:
