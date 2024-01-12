@@ -1,0 +1,65 @@
+name: UAT
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  promote-images:
+    runs-on: ubuntu-latest
+    permissions:
+        contents: write
+        packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      # Cache node_modules
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20.10.0
+          cache: 'npm'
+      - run: npm ci
+      - name: Get release details
+        uses: actions/github-script@v5
+        id: release
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const release = await github.rest.repos.getReleaseByTag({
+              owner,
+              repo,
+              tag: context.ref.replace('refs/tags/', '')
+            })
+            return release.data
+
+      - name: Get semver of rc tag to promote
+        run: |
+            # replace . and - with space so can split into an array
+            CURRENT_VERSION=${{ fromJson(steps.release.outputs.result).tag_name }}
+            CURRENT_VERSION_PARTS=(${CURRENT_VERSION//-/ })
+            CURRENT_VERSION_PARTS=(${CURRENT_VERSION_PARTS[0]//./ })
+            VNUM1=${CURRENT_VERSION_PARTS[0]}
+            VNUM2=${CURRENT_VERSION_PARTS[1]}
+            VNUM3=${CURRENT_VERSION_PARTS[2]}
+            SEMVER="$VNUM1.$VNUM2.$VNUM3"
+            echo "TAG_TO_PROMOTE=$CURRENT_VERSION" >> $GITHUB_ENV
+            echo "PROMOTED_TAG=$SEMVER" >> $GITHUB_ENV
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Promote services 
+        run: |
+          npx nx run-many -t promote-image --all --parallel=1
+      - name: Create new tag
+        uses: actions/github-script@v5
+        with:
+            script: |
+                const { owner, repo } = context.repo
+                const tag_name = "${{ env.PROMOTED_TAG }}"
+                const message = `Release ${tag_name}`
+                const sha = "${{ fromJson(steps.release.outputs.result).target_commitish }}"
+                await github.rest.git.createRef({
+                owner,
+                repo,
+                ref: `refs/tags/${tag_name}`,
+                sha
+                })

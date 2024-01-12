@@ -34,6 +34,9 @@
     },
     "test": {
       "command": "go test ./apps/test2/..."
+    },
+    "promote-image": {
+      "command": "docker pull ghcr.io/gpt-next/monorepo/test2:$TAG_TO_PROMOTE && docker tag ghcr.io/gpt-next/monorepo/test2:$TAG_TO_PROMOTE ghcr.io/gpt-next/monorepo/test2:$PROMOTED_TAG && docker push ghcr.io/gpt-next/monorepo/test2:$PROMOTED_TAG"
     }
   }
 }

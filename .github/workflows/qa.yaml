@@ -4,30 +4,52 @@ on:
     branches:
       # Change this if your primary branch is not main
       - release/*
-  pull_request:
     
 jobs:
-  main:
+  build:
     runs-on: ubuntu-latest
     # Sets the permissions granted to the `GITHUB_TOKEN` for the actions in this job.
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Extract branch name
-        shell: bash
+      - name: Get next tag
+        id: get-next-tag
         run: |
-          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          VERSION=${BRANCH#release/}
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-        id: extract_branch
-      - name: What is the release version?
-        shell: bash
-        run: echo ${{ steps.extract_branch.outputs.version }}
-      - name: Automatic Tagging of Releases
-        id: increment-git-tag
+          bash ./build/get_next_tag.sh
+       # Cache node_modules
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20.10.0
+          cache: 'npm'
+      - run: npm ci
+      - uses: nrwl/nx-set-shas@v3
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${{ steps.get-next-tag.outputs.tag }}" >> $GITHUB_ENV
+      - run: npx nx format:check
+      - run: npx nx run-many --all -t lint --parallel=1
+      - run: npx nx run-many --all -t test --parallel=1
+      - run: npx nx run-many --all -t build --parallel=1
+      - run: npx nx run-many --all -t package --parallel=1
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - run: npx nx run-many --all -t publish --parallel=1
+      - name: Create Tag
+        id: create-tag
+        if: ${{ steps.get-next-tag.outputs.is_new_tag == 'true' }}
         run: |
-          bash ./build/git_update.sh -v ${{ steps.extract_branch.outputs.version }}
+          bash ./build/create_tag.sh -t ${{ steps.get-next-tag.outputs.tag }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        if: ${{ steps.get-next-tag.outputs.is_new_tag == 'true' }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          tag_name: ${{ steps.get-next-tag.outputs.tag}}
+          release_name: "QA: Pre-Release ${{ steps.get-next-tag.outputs.tag}}"
+          draft: false
+          prerelease: true
