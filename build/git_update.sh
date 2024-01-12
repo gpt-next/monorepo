@@ -40,6 +40,7 @@ echo "Current Version: $CURRENT_VERSION"
 
 # replace . and - with space so can split into an array
 CURRENT_VERSION_PARTS=(${CURRENT_VERSION//./ })
+echo $CURRENT_VERSION_PARTS
 CURRENT_VERSION_PARTS=(${CURRENT_VERSION_PARTS//-/ })
 echo $CURRENT_VERSION_PARTS
 VNUM1=${CURRENT_VERSION_PARTS[0]}
