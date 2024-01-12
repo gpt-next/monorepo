@@ -56,9 +56,10 @@ NEEDS_TAG=`git describe --contains $GIT_COMMIT 2>/dev/null`
 # only tag if no tag already
 if [ -z "$NEEDS_TAG" ]; then
   echo "::set-output name=tag::$NEW_TAG"
+  echo "::set-output name=is_new_tag::true"
 else
   echo "::set-output name=tag::$CURRENT_VERSION"
+  echo "::set-output name=is_new_tag::false"
 fi
-echo "::set-output name=is_new_tag::$NEEDS_TAG"
 
 exit 0
