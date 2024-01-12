@@ -5,7 +5,7 @@ on:
       - released
 
 jobs:
-  promote:
+  promote-images:
     runs-on: ubuntu-latest
     permissions:
         contents: write
