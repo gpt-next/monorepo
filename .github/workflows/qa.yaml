@@ -27,3 +27,7 @@ jobs:
       - name: What is the release version?
         shell: bash
         run: echo ${{ steps.extract_branch.outputs.version }}
+      - name: Automatic Tagging of Releases
+        id: increment-git-tag
+        run: |
+          bash ./build/git_update.sh -v ${{ steps.extract_branch.outputs.version }}
