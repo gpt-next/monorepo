@@ -25,7 +25,7 @@ else
   if [ -z "$RELEASE_CANDIDATE" ]; then
     # If the latest tag is not a release candidate, reset RC_NUM and increment minor version
     RC_NUM=1
-    VERSION_PARTS=(${VERSION//./ })
+    VERSION_PARTS=(${CURRENT_VERSION//./ })
     MAJOR_VERSION=${VERSION_PARTS[0]}
     MINOR_VERSION=${VERSION_PARTS[1]}
     PATCH_VERSION=$((VERSION_PARTS[2]+1))
