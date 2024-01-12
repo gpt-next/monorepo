@@ -27,8 +27,9 @@ else
     RC_NUM=1
     VERSION_PARTS=(${VERSION//./ })
     MAJOR_VERSION=${VERSION_PARTS[0]}
-    MINOR_VERSION=$((VERSION_PARTS[1]+1))
-    VERSION="$MAJOR_VERSION.$MINOR_VERSION-rc$RC_NUM"
+    MINOR_VERSION=${VERSION_PARTS[1]}
+    PATCH_VERSION=$((VERSION_PARTS[2]+1))
+    CURRENT_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
   else
     # If the latest tag is a release candidate, increment the release candidate number
     RC_NUM=$((RELEASE_CANDIDATE+1))
