@@ -30,13 +30,13 @@ jobs:
       - name: Set image tag
         run: echo "IMAGE_TAG=${{ steps.get-next-tag.outputs.tag }}" >> $GITHUB_ENV
       - run: npx nx format:check
-      - run: npx nx lint --all --parallel=1
-      - run: npx nx test --all --parallel=1
-      - run: npx nx build --all --parallel=1
-      - run: npx nx package --all --parallel=1
+      - run: npx nx run-many --all -t lint --parallel=1
+      - run: npx nx run-many --all -t test --parallel=1
+      - run: npx nx run-many --all -t build --parallel=1
+      - run: npx nx run-many --all -t package --parallel=1
       - name: Log in to GitHub Container Registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-      - run: npx nx publish --all --parallel=1
+      - run: npx nx run-many --all -t publish --parallel=1
       - name: Create Tag
         id: create-tag
         if: ${{ steps.get-next-tag.outputs.is_new_tag == 'true' }}
