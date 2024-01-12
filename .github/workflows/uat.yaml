@@ -10,7 +10,12 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
+      # Cache node_modules
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20.10.0
+          cache: 'npm'
+      - run: npm ci
       - name: Get release details
         uses: actions/github-script@v5
         id: release
@@ -24,10 +29,18 @@ jobs:
             })
             return release.data
 
-      - name: Print release details
+      - name: Get semver of rc tag to promote
         run: |
-            echo "Release tag: ${{ fromJson(steps.release.outputs.result).tag_name }}"
-
-      - name: Run job
+            # replace . and - with space so can split into an array
+            CURRENT_VERSION=${{ fromJson(steps.release.outputs.result).tag_name }}
+            CURRENT_VERSION_PARTS=(${CURRENT_VERSION//-/ })
+            CURRENT_VERSION_PARTS=(${CURRENT_VERSION_PARTS[0]//./ })
+            VNUM1=${CURRENT_VERSION_PARTS[0]}
+            VNUM2=${CURRENT_VERSION_PARTS[1]}
+            VNUM3=${CURRENT_VERSION_PARTS[2]}
+            SEMVER="$VNUM1.$VNUM2.$VNUM3"
+            echo "TAG_TO_PROMOTE=$CURRENT_VERSION" >> $GITHUB_ENV
+            echo "PROMOTED_TAG=$SEMVER" >> $GITHUB_ENV
+      - name: Promote services 
         run: |
-          echo "A release was published!"
+          npx nx run-many -t promote-image --all --parallel=1
