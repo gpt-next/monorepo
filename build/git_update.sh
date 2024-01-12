@@ -66,6 +66,6 @@ if [ -z "$NEEDS_TAG" ]; then
 else
   echo "Already a tag on this commit"
 fi
-echo "git-tag=$NEW_TAG" >> "$GITHUB_ENV"
+echo "::set-output name=tag::$NEW_TAG"
 
 exit 0
