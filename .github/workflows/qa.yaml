@@ -4,7 +4,6 @@ on:
     branches:
       # Change this if your primary branch is not main
       - release/*
-  pull_request:
     
 jobs:
   main:
@@ -17,27 +16,38 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Extract branch name
-        shell: bash
+      - name: Get next tag
+        id: get-next-tag
         run: |
-          BRANCH=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          VERSION=${BRANCH#release/}
-          echo "version=${VERSION}" >> $GITHUB_OUTPUT
-        id: extract_branch
-      - name: What is the release version?
-        shell: bash
-        run: echo ${{ steps.extract_branch.outputs.version }}
-      - name: Automatic Tagging of Releases
-        id: increment-git-tag
+          bash ./build/git_next_tag.sh
+       # Cache node_modules
+       - uses: actions/setup-node@v3
+       with:
+         node-version: 20.10.0
+         cache: 'npm'
+      - run: npm ci
+      - uses: nrwl/nx-set-shas@v3
+      - name: Set image tag
+        run: echo "IMAGE_TAG=${{ steps.get-next-tag.outputs.tag }}" >> $GITHUB_ENV
+      - run: npx nx format:check
+      - run: npx nx affected -t lint --parallel=1
+      - run: npx nx affected -t test --parallel=1
+      - run: npx nx affected -t build --parallel=1
+      - run: npx nx affected -t package --parallel=1
+      - name: Log in to GitHub Container Registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - run: npx nx affected -t publish --parallel=1
+      - name: Create Tag
+        id: create-tag
         run: |
-          bash ./build/git_update.sh -v ${{ steps.extract_branch.outputs.version }}
+          bash ./build/create_tag.sh -n ${{ steps.get-next-tag.outputs.needs_tag}} -t ${{ steps.get-next-tag.outputs.tag }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
-          tag_name: ${{ steps.increment-git-tag.outputs.tag}}
-          release_name: "QA: Pre-Release ${{ steps.increment-git-tag.outputs.tag }}"
+          tag_name: ${{ steps.get-next-tag.outputs.needs_tag}}
+          release_name: "QA: Pre-Release ${{ steps.get-next-tag.outputs.needs_tag}}"
           draft: false
           prerelease: true
