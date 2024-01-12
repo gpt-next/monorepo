@@ -25,7 +25,10 @@ else
   if [ -z "$RELEASE_CANDIDATE" ]; then
     # If the latest tag is not a release candidate, reset RC_NUM and increment minor version
     RC_NUM=1
-    VERSION=$((VERSION+1))
+    VERSION_PARTS=(${VERSION//./ })
+    MAJOR_VERSION=${VERSION_PARTS[0]}
+    MINOR_VERSION=$((VERSION_PARTS[1]+1))
+    VERSION="$MAJOR_VERSION.$MINOR_VERSION-rc$RC_NUM"
   else
     # If the latest tag is a release candidate, increment the release candidate number
     RC_NUM=$((RELEASE_CANDIDATE+1))
