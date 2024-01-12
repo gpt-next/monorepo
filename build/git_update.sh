@@ -17,6 +17,7 @@ CURRENT_VERSION=`git describe --abbrev=0 --tags 2>/dev/null`
 
 if [[ $CURRENT_VERSION == '' ]]; then
   # If no tags exist, start with v${VERSION}.0-rc1
+  echo "No tags exist, starting with v${VERSION}.0-rc1"
   CURRENT_VERSION="v${VERSION}.0-rc1"
 else
   # Extract release candidate number from the latest tag
@@ -41,8 +42,8 @@ fi
 echo "Current Version: $CURRENT_VERSION"
 
 # replace . and - with space so can split into an array
-CURRENT_VERSION_PARTS=(${CURRENT_VERSION//./ })
-CURRENT_VERSION_PARTS=(${CURRENT_VERSION_PARTS//-/ })
+CURRENT_VERSION_PARTS=(${CURRENT_VERSION//-/ })
+CURRENT_VERSION_PARTS=(${CURRENT_VERSION_PARTS[0]//./ })
 VNUM1=${CURRENT_VERSION_PARTS[0]}
 VNUM2=${CURRENT_VERSION_PARTS[1]}
 VNUM3=${CURRENT_VERSION_PARTS[2]}
