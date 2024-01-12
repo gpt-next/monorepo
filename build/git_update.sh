@@ -1,6 +1,7 @@
 #!/bin/bash
 
 VERSION=""
+RC_NUM=0
 
 # get parameters
 while getopts v: flag
@@ -14,26 +15,34 @@ done
 git fetch --prune --unshallow 2>/dev/null
 CURRENT_VERSION=`git describe --abbrev=0 --tags 2>/dev/null`
 
-if [[ $CURRENT_VERSION == '' ]]
-then
-  CURRENT_VERSION="v${VERSION}.0"
+if [[ $CURRENT_VERSION == '' ]]; then
+  # If no tags exist, start with v${VERSION}.0-rc1
+  CURRENT_VERSION="v${VERSION}.0-rc1"
+else
+  # Extract release candidate number from the latest tag
+  RELEASE_CANDIDATE=$(echo "$CURRENT_VERSION" | awk -F'[-rc]' '{print $2}')
+  
+  if [ -z "$RELEASE_CANDIDATE" ]; then
+    # If the latest tag is not a release candidate, reset RC_NUM and increment minor version
+    RC_NUM=1
+    VERSION=$((VERSION+1))
+  else
+    # If the latest tag is a release candidate, increment the release candidate number
+    RC_NUM=$((RELEASE_CANDIDATE+1))
+  fi
 fi
+
 echo "Current Version: $CURRENT_VERSION"
 
-# replace . with space so can split into an array
+# replace . and - with space so can split into an array
 CURRENT_VERSION_PARTS=(${CURRENT_VERSION//./ })
-
-# get number parts
+CURRENT_VERSION_PARTS=(${CURRENT_VERSION_PARTS//-/ })
 VNUM1=${CURRENT_VERSION_PARTS[0]}
 VNUM2=${CURRENT_VERSION_PARTS[1]}
 VNUM3=${CURRENT_VERSION_PARTS[2]}
 
-
-VNUM3=$((VNUM3+1))
-
-
 # create new tag
-NEW_TAG="$VNUM1.$VNUM2.$VNUM3"
+NEW_TAG="$VNUM1.$VNUM2.$VNUM3-rc$RC_NUM"
 echo "($VERSION) updating $CURRENT_VERSION to $NEW_TAG"
 
 # get current hash and see if it already has a tag
