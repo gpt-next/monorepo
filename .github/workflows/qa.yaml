@@ -31,3 +31,13 @@ jobs:
         id: increment-git-tag
         run: |
           bash ./build/git_update.sh -v ${{ steps.extract_branch.outputs.version }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+        with:
+          tag_name: ${{ steps.increment-git-tag.outputs.git-tag }}
+          release_name: "QA: Pre-Release ${{ steps.increment-git-tag.outputs.git-tag }}"
+          draft: false
+          prerelease: true
