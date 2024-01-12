@@ -1,7 +1,7 @@
 #!/bin/bash
 
 VERSION=""
-RC_NUM=0
+RC_NUM=1
 
 # get parameters
 while getopts v: flag
