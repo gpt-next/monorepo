@@ -39,15 +39,17 @@ jobs:
       - run: npx nx affected -t publish --parallel=1
       - name: Create Tag
         id: create-tag
+        if: ${{ steps.get-next-tag.outputs.is_new_tag == 'true' }}
         run: |
-          bash ./build/create_tag.sh -n ${{ steps.get-next-tag.outputs.needs_tag}} -t ${{ steps.get-next-tag.outputs.tag }}
+          bash ./build/create_tag.sh -t ${{ steps.get-next-tag.outputs.tag }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
+        if: ${{ steps.get-next-tag.outputs.is_new_tag == 'true' }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
         with:
-          tag_name: ${{ steps.get-next-tag.outputs.needs_tag}}
-          release_name: "QA: Pre-Release ${{ steps.get-next-tag.outputs.needs_tag}}"
+          tag_name: ${{ steps.get-next-tag.outputs.tag}}
+          release_name: "QA: Pre-Release ${{ steps.get-next-tag.outputs.tag}}"
           draft: false
           prerelease: true

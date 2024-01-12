@@ -52,5 +52,13 @@ echo "($BRANCH_VERSION) updating $CURRENT_VERSION to $NEW_TAG"
 GIT_COMMIT=`git rev-parse HEAD`
 NEEDS_TAG=`git describe --contains $GIT_COMMIT 2>/dev/null`
 
-echo "::set-output name=needs_tag::$NEEDS_TAG"
-echo "::set-output name=tag::$NEW_TAG"
+
+# only tag if no tag already
+if [ -z "$NEEDS_TAG" ]; then
+  echo "::set-output name=tag::$CURRENT_VERSION"
+else
+  echo "::set-output name=tag::$NEW_TAG"
+fi
+echo "::set-output name=is_new_tag::$NEEDS_TAG"
+
+exit 0
