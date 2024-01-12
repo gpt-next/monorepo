@@ -23,6 +23,7 @@ else
   RELEASE_CANDIDATE=$(echo "$CURRENT_VERSION" | awk -F'[-rc]' '{print $2}')
   
   if [ -z "$RELEASE_CANDIDATE" ]; then
+    echo "No release candidate number found in tag $CURRENT_VERSION"
     # If the latest tag is not a release candidate, reset RC_NUM and increment minor version
     RC_NUM=1
     VERSION_PARTS=(${CURRENT_VERSION//./ })
@@ -31,6 +32,7 @@ else
     PATCH_VERSION=$((VERSION_PARTS[2]+1))
     CURRENT_VERSION="$MAJOR_VERSION.$MINOR_VERSION.$PATCH_VERSION"
   else
+    echo "Release candidate number $RELEASE_CANDIDATE found in tag $CURRENT_VERSION"
     # If the latest tag is a release candidate, increment the release candidate number
     RC_NUM=$((RELEASE_CANDIDATE+1))
   fi
