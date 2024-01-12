@@ -1,0 +1,32 @@
+name: UAT
+on:
+  release:
+    types:
+      - released
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Get release details
+        uses: actions/github-script@v5
+        id: release
+        with:
+          script: |
+            const { owner, repo } = context.repo
+            const release = await github.rest.repos.getReleaseByTag({
+              owner,
+              repo,
+              tag: context.ref.replace('refs/tags/', '')
+            })
+            return release.data
+
+      - name: Print release details
+        run: echo "${{ steps.release.outputs.result }}"
+
+      - name: Run job
+        run: |
+          echo "A release was published!"
