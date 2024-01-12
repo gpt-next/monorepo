@@ -21,10 +21,10 @@ jobs:
         run: |
           bash ./build/git_next_tag.sh
        # Cache node_modules
-       - uses: actions/setup-node@v3
-       with:
-         node-version: 20.10.0
-         cache: 'npm'
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20.10.0
+          cache: 'npm'
       - run: npm ci
       - uses: nrwl/nx-set-shas@v3
       - name: Set image tag
