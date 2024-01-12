@@ -25,7 +25,8 @@ jobs:
             return release.data
 
       - name: Print release details
-        run: echo "${{ steps.release.outputs.result }}"
+        run: |
+            echo "Release tag: ${{ fromJson(steps.release.outputs.result).tag_name }}"
 
       - name: Run job
         run: |
