@@ -54,7 +54,7 @@ jobs:
         with:
             script: |
                 const { owner, repo } = context.repo
-                const tag_name = ${{ env.TAG_TO_PROMOTE }}
+                const tag_name = "${{ env.TAG_TO_PROMOTE }}"
                 const message = `Release ${tag_name}`
                 const sha = "${{ fromJson(steps.release.outputs.result).target_commitish }}"
                 await github.rest.git.createRef({
