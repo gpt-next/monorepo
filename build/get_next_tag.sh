@@ -12,8 +12,8 @@ CURRENT_VERSION=`git describe --abbrev=0 --tags 2>/dev/null`
 
 if [[ $CURRENT_VERSION == '' ]]; then
   # If no tags exist, start with v${VERSION}.0-rc1
-  echo "No tags exist, starting with v${BRANCH_VERSION}.0-rc1"
-  CURRENT_VERSION="v${BRANCH_VERSION}.0-rc1"
+  echo "No tags exist, starting with ${BRANCH_VERSION}.0-rc1"
+  CURRENT_VERSION="${BRANCH_VERSION}.0-rc1"
 else
   # Extract release candidate number from the latest tag
   RELEASE_CANDIDATE=$(echo "$CURRENT_VERSION" | awk -F'-rc' '{print $2}')
