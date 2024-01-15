@@ -10,7 +10,7 @@ import (
 
 func main() {
 	log.Info().Msg("Hello from Zerolog logger")
-	log.Info().Msg("test: Hello Chris!")
+	log.Info().Msg("test: Hello Chris!!")
 	model := model.Model{
 		Name: "test",
 	}
