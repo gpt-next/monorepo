@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/gpt-next/monorepo/apps/test2/src/model"
 	"github.com/rs/zerolog/log"
@@ -15,4 +16,5 @@ func main() {
 	}
 
 	fmt.Print(model)
+	time.Sleep(24 * time.Hour)
 }
