@@ -8,5 +8,5 @@ import (
 
 func main() {
 	log.Info().Msg("Hello from Zerolog logger")
-	fmt.Printf("test2: Hello World!! v1")
+	fmt.Printf("test2: Hello World!! new v1.0")
 }
