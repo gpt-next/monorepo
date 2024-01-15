@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/rs/zerolog/log"
@@ -9,6 +8,6 @@ import (
 
 func main() {
 	log.Info().Msg("Hello from Zerolog logger")
-	fmt.Printf("test2: Hello World!")
+	log.Info().Msg("test2: Hello World!")
 	time.Sleep(24 * time.Hour)
 }
